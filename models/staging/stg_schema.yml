@@ -1,0 +1,111 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "One row per customer. Renames raw fields for consistency."
+    columns:
+      - name: customer_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Full name of the customer."
+
+  - name: stg_items
+    description: "One row per line item sold. Links orders to products via SKU."
+    columns:
+      - name: item_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key to stg_orders."
+        tests:
+          - not_null
+      - name: sku
+        description: "Foreign key to stg_products."
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: "One row per customer order. Contains order totals and store/customer references."
+    columns:
+      - name: order_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to stg_customers."
+        tests:
+          - not_null
+      - name: store_id
+        description: "Foreign key to stg_stores."
+        tests:
+          - not_null
+      - name: ordered_at
+        description: "Timestamp when the order was placed."
+      - name: order_subtotal
+        description: "Order subtotal before tax, in cents."
+      - name: order_tax_paid
+        description: "Tax paid on the order, in cents."
+      - name: order_total
+        description: "Total amount paid including tax, in cents."
+
+  - name: stg_products
+    description: "One row per product SKU. Contains pricing and product type."
+    columns:
+      - name: sku
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Display name of the product."
+      - name: type
+        description: "Product category: jaffle or beverage."
+      - name: price
+        description: "Selling price per unit, in cents."
+      - name: description
+        description: "Human-readable product description."
+
+  - name: stg_stores
+    description: "One row per store location."
+    columns:
+      - name: store_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "Display name of the store."
+      - name: opened_at
+        description: "Date the store opened."
+      - name: tax_rate
+        description: "Local tax rate applied to orders at this store."
+
+  - name: stg_supplies
+    description: "One row per supply item per product SKU. A supply (e.g. cutlery) can appear for multiple SKUs — the composite key is (supply_id, sku)."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - supply_id
+              - sku
+    columns:
+      - name: supply_id
+        description: "Supply catalog ID. Not unique alone — the same supply can be used across multiple SKUs."
+        tests:
+          - not_null
+      - name: supply_name
+        description: "Name of the supply item."
+      - name: supply_cost
+        description: "Cost of this supply item, in cents."
+      - name: perishable
+        description: "True if this supply is perishable (short shelf life or requires refrigeration)."
+      - name: sku
+        description: "Foreign key to stg_products."
+        tests:
+          - not_null

@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: "One row per product SKU. Combines product attributes with aggregated supply costs to produce unit-level profitability metrics."
+    columns:
+      - name: sku
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Display name of the product."
+      - name: product_type
+        description: "Product category."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['jaffle', 'beverage']
+      - name: price
+        description: "Selling price per unit, in cents."
+      - name: total_supply_cost
+        description: "Sum of all supply costs for this SKU, in cents."
+      - name: gross_margin
+        description: "Price minus total supply cost per unit, in cents."
+      - name: margin_pct
+        description: "Gross margin as a fraction of price (0.0–1.0)."
+      - name: has_perishable_supply
+        description: "True if any supply for this SKU is perishable."
+
+  - name: fct_sales_line
+    description: "One row per item sold. Enriched with order, store, product, and unit-level profitability fields. Primary analytics output for the profitability question."
+    columns:
+      - name: item_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key to the parent order."
+      - name: ordered_at
+        description: "Timestamp when the order was placed."
+      - name: store_id
+        description: "Store where the order was placed."
+      - name: store_name
+        description: "Name of the store."
+      - name: sku
+        description: "Product SKU sold."
+      - name: product_name
+        description: "Name of the product sold."
+      - name: product_type
+        description: "Product category: jaffle or beverage."
+      - name: price
+        description: "Selling price per unit, in cents."
+      - name: total_supply_cost
+        description: "Supply cost for this unit, in cents."
+      - name: gross_margin
+        description: "Gross profit per unit sold, in cents."
+      - name: has_perishable_supply
+        description: "True if any supply for this product is perishable."

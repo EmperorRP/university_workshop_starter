@@ -1,4 +1,33 @@
 # University Workshop Starter
+
+## Analytics question
+
+**Primary:** Which products and stores are most profitable?
+
+**Supporting:**
+- Which product types (jaffle vs beverage) have the highest gross margin and margin %?
+- Do simpler products (fewer ingredients) outperform complex ones on profitability?
+- Which stores generate the most profit — and does it align with revenue ranking?
+
+---
+
+## Insights
+
+### 1. Ingredient complexity drives margin, not product type
+The top two SKUs by margin % are one jaffle and one beverage: *nutellaphone who dis?* (jaffle, **89.0%**) and the daily *pourover coffee* (beverage, **88.3%**). Both share the same pattern — few, inexpensive perishable ingredients. The worst performer, *chai and mighty* (beverage, **65.0%**), is dragged down by expensive chai mix + protein at 175¢ total supply cost on a 500¢ price. The *krautback* jaffle sits at **69.5%** due to bratwurst at 234¢ alone. Margin compression is an ingredient complexity problem, not a jaffle-vs-beverage problem.
+
+### 2. Philadelphia (the oldest store) accounts for all measured sales volume
+Philadelphia (opened Sep 2016) recorded **997 units sold**, **$68.18 in total revenue**, and **$54.12 in gross profit** at a **79.4% blended margin** — the blended rate sitting below the top SKUs because the sales mix includes lower-margin products. As the only store with sufficient sales data in this seed dataset, it serves as the baseline for margin benchmarking across the menu.
+
+---
+
+## Next steps
+
+1. **Compare store product mix as more stores accumulate data** — newer stores (LA opened Sep 2019, New Orleans Mar 2019) will have shorter histories in this dataset. As data grows, aggregate `fct_sales_line` by `store_name` and `product_type` to test whether stores with beverage-heavy mix outperform on blended margin.
+2. **Track margin trend over time** — run `SELECT DATE_TRUNC(ordered_at, MONTH), ROUND(SUM(gross_margin)/SUM(price)*100,1) FROM fct_sales_line GROUP BY 1 ORDER BY 1` to detect whether menu changes or seasonal shifts affect Philadelphia's 79.4% blended margin baseline.
+
+---
+
 This repository is a **starting point** for an end-to-end analytics engineering project in dbt as experienced in a dbt Labs University Workshop. This repo uses the legendary [Jaffle Shop](https://github.com/dbt-labs/jaffle-shop) project for its curated sample data, but with a much smaller scope: **only seeds** are included so you can get started easily. Your job in the workshop will be to design and build your own staging layer (guided) and then the intermediate and mart layer (independently) to ultimately answer specified analytics/business question(s).
 
 ## What you’re building
