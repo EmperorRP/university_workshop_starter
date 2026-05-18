@@ -1,3 +1,6 @@
+-- What margin does each product have?
+-- 1 row per SKU
+
 with products as (
 
     select * from {{ ref('stg_products') }}

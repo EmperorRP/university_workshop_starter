@@ -9,7 +9,3 @@ sources:
       - name: raw_products
       - name: raw_stores
       - name: raw_supplies
-
-  - name: stripe
-    tables:
-      - name: payments

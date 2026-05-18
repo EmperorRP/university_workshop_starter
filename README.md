@@ -17,14 +17,14 @@
 The top two SKUs by margin % are one jaffle and one beverage: *nutellaphone who dis?* (jaffle, **89.0%**) and the daily *pourover coffee* (beverage, **88.3%**). Both share the same pattern — few, inexpensive perishable ingredients. The worst performer, *chai and mighty* (beverage, **65.0%**), is dragged down by expensive chai mix + protein at 175¢ total supply cost on a 500¢ price. The *krautback* jaffle sits at **69.5%** due to bratwurst at 234¢ alone. Margin compression is an ingredient complexity problem, not a jaffle-vs-beverage problem.
 
 ### 2. Philadelphia (the oldest store) accounts for all measured sales volume
-Philadelphia (opened Sep 2016) recorded **997 units sold**, **$68.18 in total revenue**, and **$54.12 in gross profit** at a **79.4% blended margin** — the blended rate sitting below the top SKUs because the sales mix includes lower-margin products. As the only store with sufficient sales data in this seed dataset, it serves as the baseline for margin benchmarking across the menu.
+Philadelphia (opened Sep 2016) recorded **997 units sold**, **$6,818.00 in total revenue**, and **$5,412.28 in gross profit** at a **79.4% blended margin** — the blended rate sitting below the top SKUs because the sales mix includes lower-margin products. As the only store with sufficient sales data in this seed dataset, it serves as the baseline for margin benchmarking across the menu.
 
 ---
 
 ## Next steps
 
-1. **Compare store product mix as more stores accumulate data** — newer stores (LA opened Sep 2019, New Orleans Mar 2019) will have shorter histories in this dataset. As data grows, aggregate `fct_sales_line` by `store_name` and `product_type` to test whether stores with beverage-heavy mix outperform on blended margin.
-2. **Track margin trend over time** — run `SELECT DATE_TRUNC(ordered_at, MONTH), ROUND(SUM(gross_margin)/SUM(price)*100,1) FROM fct_sales_line GROUP BY 1 ORDER BY 1` to detect whether menu changes or seasonal shifts affect Philadelphia's 79.4% blended margin baseline.
+1. **Expand to store-level profitability** — as more stores accumulate sales data, aggregate `fct_sales_line` by `store_name` to compare total gross profit and blended margin across locations.
+2. **Incorporate customer data** — join `stg_customers` into the mart layer to understand whether high-margin products are concentrated among repeat customers or distributed evenly across the customer base.
 
 ---
 
